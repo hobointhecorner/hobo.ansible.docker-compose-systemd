@@ -29,7 +29,7 @@
 
 - name: Ensure group membership
   become: true
-  loop: "{{ docker_service_group_members }}"
+  loop: "{{ docker_service_group_additional_members }}"
   ansible.builtin.user:
     name: "{{ item }}"
     append: true
@@ -43,7 +43,7 @@
     state: directory
     owner: "{{ docker_service_user }}"
     group: "{{ docker_service_group }}"
-    mode: "{{ docker_config_service_dir_mode }}"
+    mode: "{{ docker_service_config_dir_mode }}"
 
 - name: Ensure additional service directories
   become: true
@@ -73,4 +73,4 @@
     content: "{{ docker_service_configuration | to_nice_yaml(indent=2, sort_keys=false) }}"
     owner: "{{ docker_service_user }}"
     group: "{{ docker_service_group }}"
-    mode: "{{ docker_config_service_dir_mode }}"
+    mode: "{{ docker_service_config_file_mode }}"

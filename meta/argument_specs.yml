@@ -22,33 +22,33 @@ argument_specs:
         type: str
         default: /srv
 
-      docker_service_guid:
-        type: str
-
       docker_service_user:
         type: str
-
-      docker_service_user_add_to_docker_group:
-        type: bool
-        default: true
 
       docker_service_user_additional_groups:
         type: str
         default: []
 
+      docker_service_user_add_to_docker_group:
+        type: bool
+        default: true
+
       docker_service_group:
         type: str
 
-      docker_service_group_members:
+      docker_service_group_additional_members:
         type: list
         elements: str
         default: []
 
-      docker_config_service_dir_mode:
+      docker_service_guid:
+        type: str
+
+      docker_service_config_dir_mode:
         type: str
         default: "2771"
 
-      docker_config_service_file_mode:
+      docker_service_config_file_mode:
         type: str
         default: "755"
 
