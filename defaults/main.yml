@@ -1,0 +1,9 @@
+---
+docker_service_config_dest: /srv
+docker_service_guid:
+docker_service_user: "{{ docker_service_name }}"
+docker_service_user_additional_groups: []
+docker_service_group: "{{ docker_service_name }}"
+docker_service_group_members: []
+docker_config_service_dir_mode: "2771"
+docker_config_service_file_mode: "755"

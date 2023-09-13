@@ -1,0 +1,11 @@
+---
+galaxy_info:
+  role_name: docker_compose_service
+  author: hobointhecorner
+  description: Configure a docker compose systemd service
+  min_ansible_version: "2.15"
+  license: MPL-2.0
+
+  galaxy_tags: []
+
+dependencies: []

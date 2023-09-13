@@ -1,0 +1,49 @@
+---
+argument_specs:
+  main:
+    options:
+      #
+      # REQUIRED
+      #
+
+      docker_service_name:
+        type: str
+        required: true
+
+      docker_service_configuration:
+        type: dict
+        required: true
+
+      #
+      # OPTIONAL
+      #
+
+      docker_service_config_dest:
+        type: str
+        default: /srv
+
+      docker_service_guid:
+        type: str
+
+      docker_service_user:
+        type: str
+
+      docker_service_user_additional_groups:
+        type: str
+        default: []
+
+      docker_service_group:
+        type: str
+
+      docker_service_group_members:
+        type: list
+        elements: str
+        default: []
+
+      docker_config_service_dir_mode:
+        type: str
+        default: "2771"
+
+      docker_config_service_file_mode:
+        type: str
+        default: "755"

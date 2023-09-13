@@ -1,0 +1,58 @@
+---
+- name: Set facts
+  set_fact:
+    docker_service_config_dir: "{{ docker_service_config_dest | mandatory }}/{{ docker_service_name | mandatory }}"
+
+- name: Ensure service group
+  become: true
+  ansible.builtin.group:
+    name: "{{ docker_service_group | mandatory }}"
+    gid: "{{ docker_service_guid | default(omit, true) }}"
+
+- name: Ensure service user
+  become: true
+  ansible.builtin.user:
+    name: "{{ docker_service_user | mandatory }}"
+    group: "{{ docker_service_group | mandatory }}"
+    uid: "{{ docker_service_guid | default(omit, true) }}"
+    append: true
+    groups:
+      - docker
+
+- name: Ensure group membership
+  become: true
+  loop: "{{ docker_service_group_members | mandatory }}"
+  ansible.builtin.user:
+    name: "{{ item }}"
+    append: true
+    groups:
+      - "{{ docker_service_group | mandatory }}"
+
+- name: Ensure service config directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ docker_service_config_dir }}"
+    state: directory
+    owner: "{{ docker_service_user | mandatory }}"
+    group: "{{ docker_service_group | mandatory }}"
+    mode: "{{ docker_config_service_dir_mode | mandatory }}"
+
+- name: Ensure systemd service file
+  notify: Enable and restart docker service
+  become: true
+  ansible.builtin.template:
+    src: templates/service.j2
+    dest: /etc/systemd/services/{{ docker_service_name | mandatory }}.service
+    owner: root
+    group: root
+    mode: "755"
+
+- name: Ensure docker-compose file
+  notify: Enable and restart docker service
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ docker_service_config_dir }}/docker-compose.yml"
+    content: "{{ docker_service_configuration | to_nice_yaml(indent=2, sort_keys=false) }}"
+    owner: "{{ docker_service_user | mandatory }}"
+    group: "{{ docker_service_group | mandatory }}"
+    mode: "{{ docker_config_service_dir_mode | mandatory }}"
