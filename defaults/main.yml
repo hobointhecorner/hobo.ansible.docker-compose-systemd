@@ -8,3 +8,4 @@ docker_service_group: "{{ docker_service_name }}"
 docker_service_group_members: []
 docker_config_service_dir_mode: "2771"
 docker_config_service_file_mode: "755"
+docker_service_additional_directories: []

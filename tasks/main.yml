@@ -1,53 +1,66 @@
 ---
 - name: Set facts
   ansible.builtin.set_fact:
-    docker_service_config_dir: "{{ docker_service_config_dest | mandatory }}/{{ docker_service_name | mandatory }}"
-    docker_service_user_groups: >-
-      {% if docker_service_user_add_to_docker_group %}
-      {{ docker_service_user_additional_groups + 'docker' }}
-      {% else %}
-      {{ docker_service_user_additional_groups }}
-      {% endif %}
+    docker_service_config_dir: "{{ docker_service_config_dest }}/{{ docker_service_name }}"
 
 - name: Ensure service group
   become: true
   ansible.builtin.group:
-    name: "{{ docker_service_group | mandatory }}"
+    name: "{{ docker_service_group }}"
     gid: "{{ docker_service_guid | default(omit, true) }}"
 
 - name: Ensure service user
   become: true
   ansible.builtin.user:
-    name: "{{ docker_service_user | mandatory }}"
-    group: "{{ docker_service_group | mandatory }}"
+    name: "{{ docker_service_user }}"
+    group: "{{ docker_service_group }}"
     uid: "{{ docker_service_guid | default(omit, true) }}"
     append: true
-    groups: "{{ docker_service_user_groups }}"
+    groups: "{{ docker_service_user_additional_groups }}"
+
+- name: Ensure docker group membership
+  when: docker_service_user_add_to_docker_group | bool
+  become: true
+  ansible.builtin.user:
+    name: "{{ docker_service_user }}"
+    append: true
+    groups:
+      - docker
 
 - name: Ensure group membership
   become: true
-  loop: "{{ docker_service_group_members | mandatory }}"
+  loop: "{{ docker_service_group_members }}"
   ansible.builtin.user:
     name: "{{ item }}"
     append: true
     groups:
-      - "{{ docker_service_group | mandatory }}"
+      - "{{ docker_service_group }}"
 
 - name: Ensure service config directory
   become: true
   ansible.builtin.file:
     path: "{{ docker_service_config_dir }}"
     state: directory
-    owner: "{{ docker_service_user | mandatory }}"
-    group: "{{ docker_service_group | mandatory }}"
-    mode: "{{ docker_config_service_dir_mode | mandatory }}"
+    owner: "{{ docker_service_user }}"
+    group: "{{ docker_service_group }}"
+    mode: "{{ docker_config_service_dir_mode }}"
+
+- name: Ensure additional service directories
+  become: true
+  loop: "{{ docker_service_additional_directories }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner | default(docker_service_user) }}"
+    group: "{{ item.group | default(docker_service_group) }}"
+    mode: "{{ item.mode | default(docker_service_dir_mode) }}"
+    state: directory
 
 - name: Ensure systemd service file
   notify: Enable and restart docker service
   become: true
   ansible.builtin.template:
     src: templates/service.j2
-    dest: /etc/systemd/services/{{ docker_service_name | mandatory }}.service
+    dest: /etc/systemd/services/{{ docker_service_name }}.service
     owner: root
     group: root
     mode: "755"
@@ -58,6 +71,6 @@
   ansible.builtin.copy:
     dest: "{{ docker_service_config_dir }}/docker-compose.yml"
     content: "{{ docker_service_configuration | to_nice_yaml(indent=2, sort_keys=false) }}"
-    owner: "{{ docker_service_user | mandatory }}"
-    group: "{{ docker_service_group | mandatory }}"
-    mode: "{{ docker_config_service_dir_mode | mandatory }}"
+    owner: "{{ docker_service_user }}"
+    group: "{{ docker_service_group }}"
+    mode: "{{ docker_config_service_dir_mode }}"
