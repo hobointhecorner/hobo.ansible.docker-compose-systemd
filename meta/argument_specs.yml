@@ -28,6 +28,10 @@ argument_specs:
       docker_service_user:
         type: str
 
+      docker_service_user_add_to_docker_group:
+        type: bool
+        default: true
+
       docker_service_user_additional_groups:
         type: str
         default: []

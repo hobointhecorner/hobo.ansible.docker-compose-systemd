@@ -1,7 +1,13 @@
 ---
 - name: Set facts
-  set_fact:
+  ansible.builtin.set_fact:
     docker_service_config_dir: "{{ docker_service_config_dest | mandatory }}/{{ docker_service_name | mandatory }}"
+    docker_service_user_groups: >-
+      {% if docker_service_user_add_to_docker_group %}
+      {{ docker_service_user_additional_groups + 'docker' }}
+      {% else %}
+      {{ docker_service_user_additional_groups }}
+      {% endif %}
 
 - name: Ensure service group
   become: true
