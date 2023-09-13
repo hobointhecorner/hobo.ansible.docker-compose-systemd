@@ -28,8 +28,9 @@
       - docker
 
 - name: Ensure group membership
-  become: true
   loop: "{{ docker_service_group_additional_members }}"
+  become: true
+  check_mode: false
   ansible.builtin.user:
     name: "{{ item }}"
     append: true
@@ -46,8 +47,8 @@
     mode: "{{ docker_service_config_dir_mode }}"
 
 - name: Ensure additional service directories
-  become: true
   loop: "{{ docker_service_additional_directories }}"
+  become: true
   ansible.builtin.file:
     path: "{{ item.path }}"
     owner: "{{ item.owner | default(docker_service_user) }}"
