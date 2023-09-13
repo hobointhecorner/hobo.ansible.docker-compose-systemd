@@ -52,7 +52,7 @@
     path: "{{ item.path }}"
     owner: "{{ item.owner | default(docker_service_user) }}"
     group: "{{ item.group | default(docker_service_group) }}"
-    mode: "{{ item.mode | default(docker_service_dir_mode) }}"
+    mode: "{{ item.mode | default(docker_service_config_dir_mode) }}"
     state: directory
 
 - name: Ensure systemd service file
