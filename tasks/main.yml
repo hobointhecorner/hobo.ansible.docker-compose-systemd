@@ -60,7 +60,7 @@
   become: true
   ansible.builtin.template:
     src: templates/service.j2
-    dest: /etc/systemd/services/{{ docker_service_name }}.service
+    dest: /etc/systemd/system/{{ docker_service_name }}.service
     owner: root
     group: root
     mode: "755"
