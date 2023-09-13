@@ -22,8 +22,7 @@
     group: "{{ docker_service_group | mandatory }}"
     uid: "{{ docker_service_guid | default(omit, true) }}"
     append: true
-    groups:
-      - docker
+    groups: "{{ docker_service_user_groups }}"
 
 - name: Ensure group membership
   become: true
