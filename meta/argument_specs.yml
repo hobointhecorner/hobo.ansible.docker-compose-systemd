@@ -51,3 +51,18 @@ argument_specs:
       docker_config_service_file_mode:
         type: str
         default: "755"
+
+      docker_service_additional_directories:
+        type: list
+        elements: dict
+        default: []
+        options:
+          path:
+            type: str
+            required: true
+          owner:
+            type: str
+          group:
+            type: str
+          mode:
+            type: str
