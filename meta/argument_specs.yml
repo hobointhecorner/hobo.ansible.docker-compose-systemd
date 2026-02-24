@@ -9,10 +9,12 @@ argument_specs:
       docker_service_name:
         type: str
         required: true
+        description: Identifier for the systemd service, etc
 
       docker_service_configuration:
         type: dict
         required: true
+        description: A python object that will be converted to a docker-compose.yml file
 
       #
       # OPTIONAL
@@ -21,28 +23,35 @@ argument_specs:
       docker_service_config_dest:
         type: str
         default: /srv
+        description: Directory in which the service configuration directory will be created with the name of docker_service_name
 
       docker_service_user:
         type: str
+        description: Name, if different than docker_service_name, of the user the service will run as
 
       docker_service_user_additional_groups:
         type: str
         default: []
+        description: Additional groups of which the docker_service_user should be a member
 
       docker_service_user_add_to_docker_group:
         type: bool
         default: true
+        description: Add docker_service_user to the docker group
 
       docker_service_group:
         type: str
+        description: Name, if different than docker_service_user, of the primary group of the service user
 
       docker_service_group_additional_members:
         type: list
         elements: str
         default: []
+        description: Additional already-existing users to add to the service group
 
       docker_service_guid:
         type: str
+        description: Custom ID for the service user and group
 
       docker_service_config_dir_mode:
         type: str
@@ -56,6 +65,7 @@ argument_specs:
         type: list
         elements: dict
         default: []
+        description: Additional configuration directories that should be created
         options:
           path:
             type: str
@@ -66,3 +76,27 @@ argument_specs:
             type: str
           mode:
             type: str
+
+      docker_service_templates:
+        type: list
+        elements: dict
+        default: []
+        description: Additional custom template files that should be created
+        options:
+          src:
+            type: str
+            required: true
+          dest:
+            type: str
+            required: true
+          owner:
+            type: str
+          group:
+            type: str
+          mode:
+            type: str
+
+      docker_service_templates_notify_handlers:
+        type: bool
+        default: false
+        description: Notify handler(s) when custom template files are changed

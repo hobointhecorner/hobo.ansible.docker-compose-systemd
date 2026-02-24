@@ -11,3 +11,6 @@ docker_service_guid:
 docker_service_config_dir_mode: "2771"
 docker_service_config_file_mode: "755"
 docker_service_additional_directories: []
+
+docker_service_templates: []
+docker_service_templates_notify_handlers: false
