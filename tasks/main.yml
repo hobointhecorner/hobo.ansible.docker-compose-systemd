@@ -113,20 +113,20 @@
     var: docker_service_periodic_restart_enabled
 
 - debug:
-    var: docker_service_periodic_restart_cron_expr
+    var: docker_service_restart_cron_expr
 
 - name: Ensure periodic restart cron job
   become: true
-  when: docker_service_periodic_restart_cron_expr is defined and docker_service_periodic_restart_cron_expr != 'disabled'
+  when: docker_service_restart_cron_expr is defined and docker_service_restart_cron_expr != 'disabled'
   tags: ['docker-compose-systemd']
   ansible.builtin.cron:
     name: "{{ docker_service_name }}-restart"
     job: systemctl stop "{{ docker_service_name }}" && sleep 30 && systemctl start "{{ docker_service_name }}"
-    weekday: "{{ (docker_service_periodic_restart_cron.split(' '))[4] }}"
-    month:   "{{ (docker_service_periodic_restart_cron.split(' '))[3] }}"
-    day:     "{{ (docker_service_periodic_restart_cron.split(' '))[2] }}"
-    hour:    "{{ (docker_service_periodic_restart_cron.split(' '))[1] }}"
-    minute:  "{{ (docker_service_periodic_restart_cron.split(' '))[0] }}"
+    weekday: "{{ (docker_service_restart_cron_expr.split(' '))[4] }}"
+    month:   "{{ (docker_service_restart_cron_expr.split(' '))[3] }}"
+    day:     "{{ (docker_service_restart_cron_expr.split(' '))[2] }}"
+    hour:    "{{ (docker_service_restart_cron_expr.split(' '))[1] }}"
+    minute:  "{{ (docker_service_restart_cron_expr.split(' '))[0] }}"
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
