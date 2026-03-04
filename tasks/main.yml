@@ -9,44 +9,6 @@
   vars:
     service_user_name: "{{ docker_service_user }}"
     service_user_group_name: "{{ docker_service_group }}"
-    service_user_additional_groups: "{{ docker_service_user_additional_groups }}"
-    service_user_additional_group_members: "{{ docker_service_group_additional_members }}"
-    service_user_id: "{{ docker_service_guid | default(omit, true) }}"
-    service_user_group_id: "{{ docker_service_guid | default(omit, true) }}"
-
-# - name: Ensure service group
-#   become: true
-#   ansible.builtin.group:
-#     name: "{{ docker_service_group }}"
-#     gid: "{{ docker_service_guid | default(omit, true) }}"
-
-# - name: Ensure service user
-#   become: true
-#   ansible.builtin.user:
-#     name: "{{ docker_service_user }}"
-#     group: "{{ docker_service_group }}"
-#     uid: "{{ docker_service_guid | default(omit, true) }}"
-#     append: true
-#     groups: "{{ docker_service_user_additional_groups }}"
-
-# - name: Ensure docker group membership
-#   when: docker_service_user_add_to_docker_group | bool
-#   become: true
-#   ansible.builtin.user:
-#     name: "{{ docker_service_user }}"
-#     append: true
-#     groups:
-#       - docker
-
-# - name: Ensure external user group membership
-#   loop: "{{ docker_service_group_additional_members }}"
-#   become: true
-#   check_mode: false
-#   ansible.builtin.user:
-#     name: "{{ item }}"
-#     append: true
-#     groups:
-#       - "{{ docker_service_group }}"
 
 - name: Ensure service config directory
   become: true

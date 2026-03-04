@@ -2,11 +2,7 @@
 docker_service_config_dest: /srv
 
 docker_service_user: "{{ docker_service_name }}"
-docker_service_user_additional_groups: []
-docker_service_user_add_to_docker_group: true
 docker_service_group: "{{ docker_service_name }}"
-docker_service_group_additional_members: []
-docker_service_guid:
 
 docker_service_config_dir_mode: "2771"
 docker_service_config_file_mode: "755"

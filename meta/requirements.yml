@@ -1,4 +1,4 @@
 ---
 - src: git+https://github.com/hobointhecorner/hobo.ansible.service_user.git
-  version: v1.0.0
+  version: argspec-and-group-creation
   name: hobo.service-user
