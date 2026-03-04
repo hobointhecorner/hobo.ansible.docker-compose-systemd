@@ -1,16 +1,19 @@
 ---
 - name: Set facts
+  tags: ['docker-compose-systemd']
   ansible.builtin.set_fact:
     docker_service_config_dir: "{{ docker_service_config_dest }}/{{ docker_service_name }}"
 
 - name: Ensure service group
   become: true
+  tags: ['docker-compose-systemd']
   ansible.builtin.group:
     name: "{{ docker_service_group }}"
     gid: "{{ docker_service_guid | default(omit, true) }}"
 
 - name: Ensure service user
   become: true
+  tags: ['docker-compose-systemd']
   ansible.builtin.user:
     name: "{{ docker_service_user }}"
     group: "{{ docker_service_group }}"
@@ -21,6 +24,7 @@
 - name: Ensure docker group membership
   when: docker_service_user_add_to_docker_group | bool
   become: true
+  tags: ['docker-compose-systemd']
   ansible.builtin.user:
     name: "{{ docker_service_user }}"
     append: true
@@ -31,6 +35,7 @@
   loop: "{{ docker_service_group_additional_members }}"
   become: true
   check_mode: false
+  tags: ['docker-compose-systemd']
   ansible.builtin.user:
     name: "{{ item }}"
     append: true
@@ -39,6 +44,7 @@
 
 - name: Ensure service config directory
   become: true
+  tags: ['docker-compose-systemd']
   ansible.builtin.file:
     path: "{{ docker_service_config_dir }}"
     state: directory
@@ -47,10 +53,11 @@
     mode: "{{ docker_service_config_dir_mode }}"
 
 - name: Ensure additional service directories
+  become: true
   loop: "{{ docker_service_additional_directories }}"
   loop_control:
     label: "{{ item.path }}"
-  become: true
+  tags: ['docker-compose-systemd']
   ansible.builtin.file:
     path: "{{ item.path }}"
     owner: "{{ item.owner | default(docker_service_user) }}"
@@ -61,6 +68,7 @@
 - name: Ensure systemd service file
   become: true
   notify: Enable and restart docker service
+  tags: ['docker-compose-systemd']
   ansible.builtin.template:
     src: templates/systemd.service.j2
     dest: /etc/systemd/system/{{ docker_service_name }}.service
@@ -71,6 +79,7 @@
 - name: Ensure docker-compose file
   become: true
   notify: Enable and restart docker service
+  tags: ['docker-compose-systemd']
   ansible.builtin.copy:
     dest: "{{ docker_service_config_dir }}/docker-compose.yml"
     content: "{{ docker_service_configuration | to_nice_yaml(indent=2, sort_keys=false) }}"
@@ -79,16 +88,17 @@
     mode: "{{ docker_service_config_file_mode }}"
 
 - name: Ensure service template file(s)
+  become: true
   loop: "{{ docker_service_templates }}"
   loop_control:
     label: "{{ item.dest }}"
-  become: true
   notify: |
     {%- if docker_service_templates_notify_handlers | bool -%}
     Enable and restart docker service
     {%- else -%}
     {{ omit }}
     {%- endif -%}
+  tags: ['docker-compose-systemd']
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -97,11 +107,12 @@
     mode: "{{ item.mode | default(docker_service_config_file_mode) }}"
 
 - name: Ensure periodic restart cron job
+  become: true
   when: docker_service_periodic_restart_enabled | bool
+  tags: ['docker-compose-systemd']
   ansible.builtin.cron:
     name: "{{ docker_service_name }}-restart"
     job: systemctl stop "{{ docker_service_name }}" && sleep 30 && systemctl start "{{ docker_service_name }}"
-    user: "{{ docker_service_user }}"
     weekday: "{{ (docker_service_periodic_restart_cron.split(' '))[4] }}"
     month:   "{{ (docker_service_periodic_restart_cron.split(' '))[3] }}"
     day:     "{{ (docker_service_periodic_restart_cron.split(' '))[2] }}"
