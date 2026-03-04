@@ -102,11 +102,11 @@
     name: "{{ docker_service_name }}-restart"
     job: systemctl stop "{{ docker_service_name }}" && sleep 30 && systemctl start "{{ docker_service_name }}"
     user: "{{ docker_service_user }}"
-    weekday: "{{ (docker_service_periodic_restart_cron | split(' '))[4] }}"
-    month:   "{{ (docker_service_periodic_restart_cron | split(' '))[3] }}"
-    day:     "{{ (docker_service_periodic_restart_cron | split(' '))[2] }}"
-    hour:    "{{ (docker_service_periodic_restart_cron | split(' '))[1] }}"
-    minute:  "{{ (docker_service_periodic_restart_cron | split(' '))[0] }}"
+    weekday: "{{ (docker_service_periodic_restart_cron.split(' '))[4] }}"
+    month:   "{{ (docker_service_periodic_restart_cron.split(' '))[3] }}"
+    day:     "{{ (docker_service_periodic_restart_cron.split(' '))[2] }}"
+    hour:    "{{ (docker_service_periodic_restart_cron.split(' '))[1] }}"
+    minute:  "{{ (docker_service_periodic_restart_cron.split(' '))[0] }}"
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
