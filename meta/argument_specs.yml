@@ -100,3 +100,14 @@ argument_specs:
         type: bool
         default: false
         description: Notify handler(s) when custom template files are changed
+
+      docker_service_periodic_restart_enabled:
+        type: bool
+        default: false
+        description: Enable a periodic restart cron job
+
+      docker_service_periodic_restart_cron:
+        type: str
+        default: 0 4 * * 0
+        description: Cron pattern to use for the periodic restart, if enabled
+

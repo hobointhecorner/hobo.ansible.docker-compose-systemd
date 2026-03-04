@@ -62,7 +62,7 @@
   become: true
   notify: Enable and restart docker service
   ansible.builtin.template:
-    src: templates/service.j2
+    src: templates/systemd.service.j2
     dest: /etc/systemd/system/{{ docker_service_name }}.service
     owner: root
     group: root
@@ -95,6 +95,18 @@
     owner: "{{ item.owner | default(docker_service_user) }}"
     group: "{{ item.group | default(docker_service_group) }}"
     mode: "{{ item.mode | default(docker_service_config_file_mode) }}"
+
+- name: Ensure periodic restart cron job
+  when: docker_service_periodic_restart_enabled | bool
+  ansible.builtin.cron:
+    name: "{{ docker_service_name }}-restart"
+    job: systemctl stop "{{ docker_service_name }}" && sleep 30 && systemctl start "{{ docker_service_name }}"
+    user: "{{ docker_service_user }}"
+    weekday: "{{ (docker_service_periodic_restart_cron | split(' '))[4] }}"
+    month:   "{{ (docker_service_periodic_restart_cron | split(' '))[3] }}"
+    day:     "{{ (docker_service_periodic_restart_cron | split(' '))[2] }}"
+    hour:    "{{ (docker_service_periodic_restart_cron | split(' '))[1] }}"
+    minute:  "{{ (docker_service_periodic_restart_cron | split(' '))[0] }}"
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
