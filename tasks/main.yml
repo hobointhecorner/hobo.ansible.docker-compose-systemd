@@ -4,7 +4,6 @@
     docker_service_config_dir: "{{ docker_service_config_dest }}/{{ docker_service_name }}"
 
 - name: Configure service user
-  become: true
   ansible.builtin.include_role:
     role: hobo.service-user
     vars:
