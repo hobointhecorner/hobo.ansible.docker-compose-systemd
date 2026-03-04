@@ -106,6 +106,15 @@
     group: "{{ item.group | default(docker_service_group) }}"
     mode: "{{ item.mode | default(docker_service_config_file_mode) }}"
 
+- debug:
+    var: docker_service_config_file_mode
+
+- debug:
+    var: docker_service_periodic_restart_enabled
+
+- debug:
+    var: docker_service_periodic_restart_cron
+
 - name: Ensure periodic restart cron job
   become: true
   when: docker_service_periodic_restart_enabled | bool
