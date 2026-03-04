@@ -106,7 +106,7 @@ argument_specs:
         default: false
         description: Enable a periodic restart cron job
 
-      docker_service_periodic_restart_cron:
+      docker_service_periodic_restart_cron_expr:
         type: str
         default: '0 4 * * 0'
         description: Cron pattern to use for the periodic restart, if enabled

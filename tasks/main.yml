@@ -113,7 +113,7 @@
     var: docker_service_periodic_restart_enabled
 
 - debug:
-    var: docker_service_periodic_restart_cron
+    var: docker_service_periodic_restart_cron_expr
 
 - name: Ensure periodic restart cron job
   become: true
