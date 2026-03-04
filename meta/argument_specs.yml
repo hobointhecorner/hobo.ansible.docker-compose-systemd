@@ -108,6 +108,6 @@ argument_specs:
 
       docker_service_periodic_restart_cron:
         type: str
-        default: 0 4 * * 0
+        default: '0 4 * * 0'
         description: Cron pattern to use for the periodic restart, if enabled
 
