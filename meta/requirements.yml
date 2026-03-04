@@ -1,5 +1,4 @@
 ---
-roles:
-  - src: git+https://github.com/hobointhecorner/hobo.ansible.service_user.git
-    version: v1.0.0
-    name: hobo.service-user
+- src: git+https://github.com/hobointhecorner/hobo.ansible.service_user.git
+  version: v1.0.0
+  name: hobo.service-user
