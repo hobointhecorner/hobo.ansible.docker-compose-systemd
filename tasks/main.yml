@@ -6,13 +6,13 @@
 - name: Configure service user
   ansible.builtin.include_role:
     role: hobo.service-user
-    vars:
-      service_user_name: "{{ docker_service_user }}"
-      service_user_group_name: "{{ docker_service_group }}"
-      service_user_additional_groups: "{{ docker_service_user_additional_groups }}"
-      service_user_additional_group_members: "{{ docker_service_group_additional_members }}"
-      service_user_id: "{{ docker_service_guid | default(omit, true) }}"
-      service_user_group_id: "{{ docker_service_guid | default(omit, true) }}"
+  vars:
+    service_user_name: "{{ docker_service_user }}"
+    service_user_group_name: "{{ docker_service_group }}"
+    service_user_additional_groups: "{{ docker_service_user_additional_groups }}"
+    service_user_additional_group_members: "{{ docker_service_group_additional_members }}"
+    service_user_id: "{{ docker_service_guid | default(omit, true) }}"
+    service_user_group_id: "{{ docker_service_guid | default(omit, true) }}"
 
 - name: Ensure service group
   become: true
