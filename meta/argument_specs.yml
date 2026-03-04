@@ -103,5 +103,4 @@ argument_specs:
 
       docker_service_restart_cron_expr:
         type: str
-        default: 'disabled'
         description: Cron expression to use for a periodic restart task, if desired
