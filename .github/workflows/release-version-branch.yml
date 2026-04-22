@@ -1,8 +1,8 @@
 name: Make release
 on:
   push:
-   branches:
-    - main
+    branches:
+      - main
 jobs:
   make-release:
     name: Create release

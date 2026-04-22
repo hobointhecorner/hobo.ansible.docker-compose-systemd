@@ -2,8 +2,8 @@
 name: Reset upstream branch
 on:
   push:
-   branches:
-    - main
+    branches:
+      - main
 env:
   base_branch: main
   upstream_branch: v1

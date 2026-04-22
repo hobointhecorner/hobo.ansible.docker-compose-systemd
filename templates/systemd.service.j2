@@ -6,8 +6,8 @@ Requires=docker.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
-User=homebridge
-Group=homebridge
+User={{ docker_service_user }}
+Group={{ docker_service_group }}
 WorkingDirectory={{ docker_service_config_dir }}
 ExecStart=/usr/bin/docker compose up -d --remove-orphans
 ExecReload=/usr/bin/docker compose up -d --remove-orphans
